@@ -1,1 +1,5 @@
-
+blog-search-service:
+  source:
+    kakao:
+      api-key: ceb88ad05ae91a5124d590e7d1e89814
+      url: https://dapi.kakao.com/v2/search/blog

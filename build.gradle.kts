@@ -22,7 +22,14 @@ dependencies {
     // Spring Boot
     implementation("org.springframework.boot:spring-boot-starter")
     implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("org.springframework.boot:spring-boot-starter-webflux")
+
+    annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
+
+    // Kotlin
     implementation("org.jetbrains.kotlin:kotlin-reflect")
+
+    // Test
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
 
