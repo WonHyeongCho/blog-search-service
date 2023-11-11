@@ -1,5 +1,15 @@
+spring:
+  application:
+    name: blog-search-service
+  jackson:
+    date-format: com.fasterxml.jackson.databind.util.ISO8601DateFormat
+
 blog-search-service:
-  source:
+  sources:
     kakao:
       api-key: ceb88ad05ae91a5124d590e7d1e89814
       url: https://dapi.kakao.com/v2/search/blog
+
+logging:
+  level:
+    root: debug

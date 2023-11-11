@@ -1,14 +1,19 @@
 package my.blogsearchservice.client.kakao
 
 import my.blogsearchservice.config.BlogSourceConfiguration
+import my.blogsearchservice.constant.logger
 import my.blogsearchservice.dto.BlogSearchRequestDto
+import my.blogsearchservice.exception.BlogSearchServiceException
+import my.blogsearchservice.exception.ErrorEnum
+import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Component
+import org.springframework.web.reactive.function.client.ClientResponse
 import org.springframework.web.reactive.function.client.WebClient
 import reactor.core.publisher.Mono
 
 @Component
 class KakaoBlogSearchClient(
-    private val blogSourceConfiguration: BlogSourceConfiguration,
+    blogSourceConfiguration: BlogSourceConfiguration,
 ) {
 
     private val kakaoBlogSource = blogSourceConfiguration.getBlogSource("kakao")
@@ -22,7 +27,21 @@ class KakaoBlogSearchClient(
         }
         .build()
 
-    fun search(query: String, sort: String, page: Int, size: Int): Mono<KakaoBlogSearchResponse> {
+    fun search(blogSearchRequestDto: BlogSearchRequestDto): Mono<KakaoBlogSearchResponse> {
+        return search(
+            query = blogSearchRequestDto.query,
+            sort = blogSearchRequestDto.sort,
+            page = blogSearchRequestDto.page,
+            size = blogSearchRequestDto.size,
+        )
+    }
+
+    fun search(
+        query: String,
+        sort: String?,
+        page: Int?,
+        size: Int?
+    ): Mono<KakaoBlogSearchResponse> {
         return webClient.get()
             .uri {
                 it.queryParam("query", query)
@@ -32,15 +51,23 @@ class KakaoBlogSearchClient(
                     .build()
             }
             .retrieve()
+            .onStatus({ it.isError }, { errorHandle(it) })
             .bodyToMono(KakaoBlogSearchResponse::class.java)
     }
 
-    fun search(blogSearchRequestDto: BlogSearchRequestDto): Mono<KakaoBlogSearchResponse> {
-        return search(
-            query = blogSearchRequestDto.query,
-            sort = blogSearchRequestDto.sort,
-            page = blogSearchRequestDto.page,
-            size = blogSearchRequestDto.size,
-        )
+    private fun errorHandle(clientResponse: ClientResponse): Mono<Error> {
+
+        return clientResponse.bodyToMono(Error::class.java)
+            .flatMap {
+                logger().error("Kakao Blog Search API Error: ${it.message}")
+
+                when (clientResponse.statusCode()) {
+                    HttpStatus.BAD_REQUEST -> Mono.error(BlogSearchServiceException(ErrorEnum.API_BAD_REQUEST))
+                    HttpStatus.UNAUTHORIZED -> Mono.error(BlogSearchServiceException(ErrorEnum.API_UNAUTHORIZED))
+                    HttpStatus.FORBIDDEN -> Mono.error(BlogSearchServiceException(ErrorEnum.API_FORBIDDEN))
+                    HttpStatus.TOO_MANY_REQUESTS -> Mono.error(BlogSearchServiceException(ErrorEnum.API_TOO_MANY_REQUESTS))
+                    else -> Mono.error(BlogSearchServiceException(ErrorEnum.API_INTERNAL_SERVER_ERROR))
+                }
+            }
     }
 }

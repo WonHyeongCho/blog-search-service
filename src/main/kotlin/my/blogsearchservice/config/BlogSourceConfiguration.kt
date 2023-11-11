@@ -4,19 +4,18 @@ import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.context.annotation.Configuration
 
 @Configuration
-@ConfigurationProperties("blog-search-service.blog-source")
+@ConfigurationProperties(prefix = "blog-search-service")
 class BlogSourceConfiguration {
 
-    private val sourceMap: Map<String, BlogSource> = mutableMapOf()
+    val sources: Map<String, BlogSource> = mutableMapOf()
 
     fun getBlogSource(sourceName: String): BlogSource {
-        return sourceMap[sourceName]
+        return sources[sourceName]
             ?: throw IllegalArgumentException("Invalid source name: $sourceName")
     }
 
-    class BlogSource {
-
-        lateinit var apiKey: String
-        lateinit var url: String
-    }
+    data class BlogSource(
+        val apiKey: String = "",
+        val url: String = ""
+    )
 }
