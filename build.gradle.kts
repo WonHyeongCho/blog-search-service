@@ -24,6 +24,8 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-webflux")
 
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
 
     // Kotlin
@@ -35,7 +37,7 @@ dependencies {
 
 tasks.withType<KotlinCompile> {
     kotlinOptions {
-        freeCompilerArgs += "-Xjsr305=strict"
+        freeCompilerArgs = freeCompilerArgs + "-Xjsr305=strict"
         jvmTarget = "17"
     }
 }

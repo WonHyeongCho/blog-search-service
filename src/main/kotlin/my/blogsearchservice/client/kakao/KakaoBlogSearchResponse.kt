@@ -1,16 +1,16 @@
 package my.blogsearchservice.client.kakao
 
-import com.fasterxml.jackson.annotation.JsonFormat
+import com.fasterxml.jackson.databind.annotation.JsonNaming
 import my.blogsearchservice.domain.Blog
-import java.time.LocalDateTime
+import java.time.ZonedDateTime
 
 class KakaoBlogSearchResponse {
 
-    val meta: Meta = Meta()
-    val documents: List<Document> = mutableListOf()
+    var meta: Meta = Meta()
+    var documents: List<Document> = mutableListOf()
 
     fun toBlogList(): List<Blog> {
-        return this.documents.map { document ->
+        return documents.map { document ->
             Blog().apply {
                 title = document.title
                 contents = document.contents
@@ -23,21 +23,20 @@ class KakaoBlogSearchResponse {
     }
 }
 
+@JsonNaming(value = com.fasterxml.jackson.databind.PropertyNamingStrategies.SnakeCaseStrategy::class)
 class Meta {
 
-    val totalCount: Int = 0
-    val pageableCount: Int = 0
-    val isEnd: Boolean = false
+    var totalCount: Int = 0
+    var pageableCount: Int = 0
+    var isEnd: Boolean = false
 }
 
 class Document {
 
-    val title: String? = null
-    val contents: String? = null
-    val url: String? = null
-    val blogname: String? = null
-    val thumbnail: String? = null
-
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
-    val datetime: LocalDateTime? = null
+    var title: String? = null
+    var contents: String? = null
+    var url: String? = null
+    var blogname: String? = null
+    var thumbnail: String? = null
+    var datetime: ZonedDateTime? = null
 }
