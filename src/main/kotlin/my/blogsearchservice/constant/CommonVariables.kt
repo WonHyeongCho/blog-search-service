@@ -11,4 +11,10 @@ inline fun <reified T> T.logger(): Logger {
 }
 
 class CommonVariables {
+
+    companion object {
+
+        const val KAKAO_BLOG_SOURCE_NAME = "kakao"
+        const val NAVER_BLOG_SOURCE_NAME = "naver"
+    }
 }

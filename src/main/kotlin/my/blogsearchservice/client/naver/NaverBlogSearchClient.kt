@@ -1,4 +1,4 @@
-package my.blogsearchservice.client.kakao
+package my.blogsearchservice.client.naver
 
 import my.blogsearchservice.client.BlogSearchClient
 import my.blogsearchservice.config.BlogSourceConfiguration
@@ -12,29 +12,29 @@ import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.client.ClientResponse
 import org.springframework.web.reactive.function.client.WebClient
 import reactor.core.publisher.Mono
-import java.time.Duration
 
-@Component(CommonVariables.KAKAO_BLOG_SOURCE_NAME)
-class KakaoBlogSearchClient(
-    blogSourceConfiguration: BlogSourceConfiguration,
+@Component(CommonVariables.NAVER_BLOG_SOURCE_NAME)
+class NaverBlogSearchClient(
+    blogSourceConfiguration: BlogSourceConfiguration
 ) : BlogSearchClient {
 
-    private val kakaoBlogSource =
-        blogSourceConfiguration.getBlogSource(CommonVariables.KAKAO_BLOG_SOURCE_NAME)
+    private val naverBlogSource =
+        blogSourceConfiguration.getBlogSource(CommonVariables.NAVER_BLOG_SOURCE_NAME)
 
     private val webClient: WebClient = WebClient.builder()
-        .baseUrl(kakaoBlogSource.url)
+        .baseUrl(naverBlogSource.url)
         .defaultHeaders {
-            it.set("Authorization", "KakaoAK ${kakaoBlogSource.apiKey}")
+            it.set("X-Naver-Client-Id", naverBlogSource.apiKey.split(":")[0])
+            it.set("X-Naver-Client-Secret", naverBlogSource.apiKey.split(":")[1])
             it.set("Content-Type", "application/json")
             it.set("Accept", "application/json")
         }
         .build()
 
-    fun search(blogSearchRequestDto: BlogSearchRequestDto): Mono<KakaoBlogSearchResponse> {
+    fun search(blogSearchRequestDto: BlogSearchRequestDto): Mono<NaverBlogSearchResponse> {
         return search(
             query = blogSearchRequestDto.query,
-            sort = blogSearchRequestDto.sort,
+            sort = if (blogSearchRequestDto.sort == "accuracy") "sim" else "date",
             page = blogSearchRequestDto.page,
             size = blogSearchRequestDto.size,
         )
@@ -45,32 +45,28 @@ class KakaoBlogSearchClient(
         sort: String?,
         page: Int?,
         size: Int?
-    ): Mono<KakaoBlogSearchResponse> {
+    ): Mono<NaverBlogSearchResponse> {
         return webClient.get()
             .uri {
                 it.queryParam("query", query)
                     .queryParam("sort", sort)
-                    .queryParam("page", page)
-                    .queryParam("size", size)
+                    .queryParam("start", page)
+                    .queryParam("display", size)
                     .build()
             }
             .retrieve()
-            .onStatus({ it.isError }, { errorHandle(it) })
-            .bodyToMono(KakaoBlogSearchResponse::class.java)
-            .timeout(Duration.ofSeconds(3))
+            .bodyToMono(NaverBlogSearchResponse::class.java)
     }
 
     override fun errorHandle(clientResponse: ClientResponse): Mono<Error> {
-
         return clientResponse.bodyToMono(Error::class.java)
             .flatMap {
-                logger().error("Kakao Blog Search API Error: ${it.message}")
+                logger().error("Naver Blog Search API Error: ${it.message}")
 
                 when (clientResponse.statusCode()) {
                     HttpStatus.BAD_REQUEST -> Mono.error(BlogSearchServiceException(ErrorEnum.API_BAD_REQUEST))
-                    HttpStatus.UNAUTHORIZED -> Mono.error(BlogSearchServiceException(ErrorEnum.API_UNAUTHORIZED))
                     HttpStatus.FORBIDDEN -> Mono.error(BlogSearchServiceException(ErrorEnum.API_FORBIDDEN))
-                    HttpStatus.TOO_MANY_REQUESTS -> Mono.error(BlogSearchServiceException(ErrorEnum.API_TOO_MANY_REQUESTS))
+                    HttpStatus.NOT_FOUND -> Mono.error(BlogSearchServiceException(ErrorEnum.API_NOT_FOUND))
                     else -> Mono.error(BlogSearchServiceException(ErrorEnum.API_INTERNAL_SERVER_ERROR))
                 }
             }

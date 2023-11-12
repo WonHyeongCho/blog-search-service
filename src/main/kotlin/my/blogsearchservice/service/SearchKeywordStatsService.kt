@@ -3,6 +3,7 @@ package my.blogsearchservice.service
 import jakarta.transaction.Transactional
 import my.blogsearchservice.entity.SearchKeywordStat
 import my.blogsearchservice.repository.SearchKeywordStatsRepository
+import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Service
 
 @Service
@@ -14,6 +15,7 @@ class SearchKeywordStatsService(
         return searchKeywordStatsRepository.findTop10ByOrderByCountDesc()
     }
 
+    @Async
     @Transactional
     fun addSearchKeywordStat(keyword: String) {
         val searchKeywordStat = getSearchKeywordStatWithLock(keyword) ?: SearchKeywordStat(keyword)
