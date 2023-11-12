@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.client.ClientResponse
 import org.springframework.web.reactive.function.client.WebClient
 import reactor.core.publisher.Mono
+import java.time.Duration
 
 @Component
 class KakaoBlogSearchClient(
@@ -53,6 +54,7 @@ class KakaoBlogSearchClient(
             .retrieve()
             .onStatus({ it.isError }, { errorHandle(it) })
             .bodyToMono(KakaoBlogSearchResponse::class.java)
+            .timeout(Duration.ofSeconds(3))
     }
 
     private fun errorHandle(clientResponse: ClientResponse): Mono<Error> {
