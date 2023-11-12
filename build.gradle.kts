@@ -23,7 +23,6 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-webflux")
-    implementation("org.springframework.boot:spring-boot-starter-data-redis")
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
 
     // Jackson
@@ -31,10 +30,6 @@ dependencies {
 
     // Kotlin
     implementation("org.jetbrains.kotlin:kotlin-reflect")
-
-    // Redis
-    implementation("io.lettuce:lettuce-core:6.2.6.RELEASE")
-    implementation("org.apache.commons:commons-pool2")
 
     // Test
     testImplementation("org.springframework.boot:spring-boot-starter-test")
