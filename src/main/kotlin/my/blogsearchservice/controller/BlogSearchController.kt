@@ -18,6 +18,7 @@ class BlogSearchController(
 
     @GetMapping
     fun searchBlog(blogSearchRequestDto: BlogSearchRequestDto): Mono<BlogSearchResponseDto> {
+
         searchKeywordStatsService.addSearchKeywordStat(blogSearchRequestDto.query)
         return blogSearchService.searchBlogFromKakao(blogSearchRequestDto)
     }

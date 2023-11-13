@@ -6,6 +6,9 @@ import my.blogsearchservice.client.naver.NaverBlogSearchClient
 import my.blogsearchservice.constant.CommonVariables
 import my.blogsearchservice.dto.BlogSearchRequestDto
 import my.blogsearchservice.dto.BlogSearchResponseDto
+import my.blogsearchservice.exception.BlogSearchServiceException
+import org.springframework.retry.annotation.Recover
+import org.springframework.retry.annotation.Retryable
 import org.springframework.stereotype.Service
 import reactor.core.publisher.Mono
 
@@ -14,6 +17,7 @@ class BlogSearchService(
     private val blogSearchClientMap: Map<String, BlogSearchClient>,
 ) {
 
+    @Retryable(value = [BlogSearchServiceException::class], maxAttempts = 1)
     fun searchBlogFromKakao(blogSearchRequestDto: BlogSearchRequestDto): Mono<BlogSearchResponseDto> {
         val searchClient: KakaoBlogSearchClient =
             (blogSearchClientMap[CommonVariables.KAKAO_BLOG_SOURCE_NAME]
@@ -31,6 +35,7 @@ class BlogSearchService(
         }
     }
 
+    @Recover
     fun searchBlogFromNaver(blogSearchRequestDto: BlogSearchRequestDto): Mono<BlogSearchResponseDto> {
         val searchClient: NaverBlogSearchClient =
             (blogSearchClientMap[CommonVariables.NAVER_BLOG_SOURCE_NAME]
