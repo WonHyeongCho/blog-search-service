@@ -6,38 +6,40 @@
 
 ## 2. API 명세
 
-### 2.1. GET /blog - 블로그 검색 API
+### 2.1. 블로그 검색 API
+
+### GET _/blog_
 
 #### 요청 파라미터:
 
-|파라미터명|타입|설명|필수여부|  
-|---|---|---|---|   
-|query|string|검색 하고자 하는 키워드|O|    
-|sort|string|정렬 옵션, accuracy: 정확도순 or recency: 날짜순, 기본값: accuracy|X|  
-|page|integer|페이지 번호, 1 ~ 50 사이의 값, 기본 값 1|X|     
-|size|integer|페이지 사이즈, 1 ~ 50 사이의 값, 기본 값 10|X|     
+| 파라미터명 | 타입      | 설명                                                   | 필수여부 |
+|-------|---------|------------------------------------------------------|------|
+| query | string  | 검색 하고자 하는 키워드                                        | O    |
+| sort  | string  | 정렬 옵션, accuracy: 정확도순 or recency: 날짜순, 기본값: accuracy | X    |
+| page  | integer | 페이지 번호, 1 ~ 50 사이의 값, 기본 값 1                         | X    |
+| size  | integer | 페이지 사이즈, 1 ~ 50 사이의 값, 기본 값 10                       | X    |
 
 #### 응답 데이터:
 
-| 응답 필드 명 | 타입          | 설명             |  
-|-------------|-------------|----------------|   
-| page | integer     | 검색 페이지         |                       
-| size | string      | 검색된 문서 개수      |                  
-| total_page | integer     | 검색된 총 페이지 개수   |              
-| total_count | integer     | 검색된 총 문서 개수    |                
-| sort | string      | 정렬 방식          |                         
-| documents | object list | 검색된 블로그 문서 리스트 |
-| documents.title | string | 문서 제목          |
-| documents.contents | string | 문서 내용          |
-| documents.url | string | 문서 URL         |
-| documents.blogname | string | 문서 이름          |
-| documents.thumbnail | string | 문서 썸네일 URL     |
-| documents.datetime | string | 문서 작성일        |
+| 응답 필드 명             | 타입          | 설명             |
+|---------------------|-------------|----------------|
+| page                | integer     | 검색 페이지         |
+| size                | string      | 검색된 문서 개수      |
+| total_page          | integer     | 검색된 총 페이지 개수   |
+| total_count         | integer     | 검색된 총 문서 개수    |
+| sort                | string      | 정렬 방식          |
+| documents           | object list | 검색된 블로그 문서 리스트 |
+| documents.title     | string      | 문서 제목          |
+| documents.contents  | string      | 문서 내용          |
+| documents.url       | string      | 문서 URL         |
+| documents.blogname  | string      | 문서 이름          |
+| documents.thumbnail | string      | 문서 썸네일 URL     |
+| documents.datetime  | string      | 문서 작성일         |
 
 #### 응답 예시:
 
-  ```json
-  {
+```json
+{
     "page": 1,
     "size": 2,
     "total_page": 800,
@@ -60,13 +62,75 @@
             "thumbnail": "https://search3.kakaocdn.net/argon/130x130_85_c/9vphSziaxph",
             "datetime": "2023-11-14T11:38:35Z"
         }
-    ],
-    "sort": "accuracy"
+    ]
 }
-  ```
+```
 
+***
 
+### 2.2. 검색 키워드 랭크 조회 API
 
+### GET _/search-keyword/rank_
+
+#### 요청 파라미터: X
+
+#### 응답 데이터:
+
+| 응답 필드 명         | 타입          | 설명     |
+|-----------------|-------------|--------|
+| ranking         | object list | 랭킹 리스트 |
+| ranking.rank    | integer     | 순위     |
+| ranking.keyword | string      | 검색 키워드 |
+| ranking.count   | integer     | 검색된 횟수 |
+
+```json
+{
+    "ranking": [
+        {
+            "rank": 1,
+            "keyword": "판교 맛집",
+            "count": 4
+        },
+        {
+            "rank": 2,
+            "keyword": "아이폰 15, 아이폰 15 프로",
+            "count": 3
+        },
+        {
+            "rank": 3,
+            "keyword": "T1 결승",
+            "count": 2
+        },
+        {
+            "rank": 4,
+            "keyword": "남산 가는 방법",
+            "count": 1
+        },
+        {
+            "rank": 5,
+            "keyword": "내일 날씨",
+            "count": 1
+        },
+        {
+            "rank": 6,
+            "keyword": "정국 솔로 앨범",
+            "count": 1
+        },
+        {
+            "rank": 7,
+            "keyword": "좋은 팝송 추천",
+            "count": 1
+        },
+        {
+            "rank": 8,
+            "keyword": "한국사 시험",
+            "count": 1
+        }
+    ]
+}
+```
+
+## 3. 사용한 라이브러리
 
 
 
