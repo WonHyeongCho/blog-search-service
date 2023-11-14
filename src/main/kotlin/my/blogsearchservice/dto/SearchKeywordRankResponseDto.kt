@@ -1,7 +1,7 @@
 package my.blogsearchservice.dto
 
 data class SearchKeywordRankResponseDto(
-    var rank: List<KeywordRank>
+    var ranking: List<KeywordRank>
 )
 
 class KeywordRank(

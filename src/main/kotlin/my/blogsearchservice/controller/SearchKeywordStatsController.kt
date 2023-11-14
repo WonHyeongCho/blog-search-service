@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping("/search-keyword-rank")
+@RequestMapping("/search-keyword/rank")
 class SearchKeywordStatsController(
     private val searchKeywordStatsService: SearchKeywordStatsService
 ) {

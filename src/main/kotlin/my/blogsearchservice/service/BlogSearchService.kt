@@ -26,6 +26,7 @@ class BlogSearchService(
             BlogSearchResponseDto(
                 page = blogSearchRequestDto.page,
                 size = blogSearchRequestDto.size,
+                totalPage = it.meta.pageableCount,
                 totalCount = it.meta.totalCount,
                 sort = blogSearchRequestDto.sort,
                 documents = it.documents
@@ -40,8 +41,9 @@ class BlogSearchService(
 
         return searchClient.search(blogSearchRequestDto).map {
             BlogSearchResponseDto(
-                page = blogSearchRequestDto.page,
-                size = blogSearchRequestDto.size,
+                page = it.start,
+                size = it.display,
+                totalPage = (it.total / it.display).toInt(),
                 totalCount = it.total,
                 sort = blogSearchRequestDto.sort,
                 documents = it.items
