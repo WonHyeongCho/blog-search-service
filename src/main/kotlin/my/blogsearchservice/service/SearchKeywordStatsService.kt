@@ -28,5 +28,4 @@ class SearchKeywordStatsService(
     private fun getSearchKeywordStatWithLock(keyword: String): SearchKeywordStat? {
         return searchKeywordStatsRepository.findByIdWithLock(keyword)
     }
-
 }

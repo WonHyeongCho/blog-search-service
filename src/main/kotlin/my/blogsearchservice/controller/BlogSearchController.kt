@@ -1,5 +1,6 @@
 package my.blogsearchservice.controller
 
+import jakarta.validation.Valid
 import my.blogsearchservice.dto.BlogSearchRequestDto
 import my.blogsearchservice.dto.BlogSearchResponseDto
 import my.blogsearchservice.service.BlogSearchService
@@ -17,7 +18,7 @@ class BlogSearchController(
 ) {
 
     @GetMapping
-    fun searchBlog(blogSearchRequestDto: BlogSearchRequestDto): Mono<BlogSearchResponseDto> {
+    fun searchBlog(@Valid blogSearchRequestDto: BlogSearchRequestDto): Mono<BlogSearchResponseDto> {
 
         searchKeywordStatsService.addSearchKeywordStat(blogSearchRequestDto.query)
         return blogSearchService.searchBlogFromKakao(blogSearchRequestDto)

@@ -3,10 +3,7 @@ package my.blogsearchservice.exception
 import org.springframework.http.HttpStatus
 
 enum class ErrorEnum(val errorCode: String, val errorMessage: String, val httpStatus: HttpStatus) {
-
-    UNAUTHORIZED("000", "API 사용 권한이 없습니다.", HttpStatus.UNAUTHORIZED),
-    BAD_REQUEST("001", "잘못된 요청입니다.", HttpStatus.BAD_REQUEST),
-    NOT_FOUNT("002", "요청하신 데이터를 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
+    BAD_REQUEST("000", "잘못된 요청입니다.", HttpStatus.BAD_REQUEST),
 
     // API 에러
     API_UNAUTHORIZED("100", "서버 오류: 외부 API 인증 불가", HttpStatus.INTERNAL_SERVER_ERROR),

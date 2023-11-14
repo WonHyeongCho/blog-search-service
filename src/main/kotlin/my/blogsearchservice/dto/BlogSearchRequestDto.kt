@@ -6,8 +6,8 @@ import jakarta.validation.constraints.Min
 data class BlogSearchRequestDto(
     val query: String,
     val sort: String = "accuracy",
-    @Min(1) @Max(50)
+    @field:Min(value = 1) @field:Max(value = 50)
     val page: Int = 1,
-    @Min(1) @Max(50)
+    @field:Min(value = 1) @field:Max(value = 50)
     val size: Int = 10,
 )
