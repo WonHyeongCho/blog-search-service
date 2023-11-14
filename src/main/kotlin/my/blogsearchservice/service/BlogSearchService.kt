@@ -20,9 +20,7 @@ class BlogSearchService(
     @Retryable(value = [BlogSearchServiceException::class], maxAttempts = 1)
     fun searchBlogFromKakao(blogSearchRequestDto: BlogSearchRequestDto): Mono<BlogSearchResponseDto> {
         val searchClient: KakaoBlogSearchClient =
-            (blogSearchClientMap[CommonVariables.KAKAO_BLOG_SOURCE_NAME]
-                ?: throw IllegalArgumentException("Invalid source: ${CommonVariables.KAKAO_BLOG_SOURCE_NAME}"))
-                as KakaoBlogSearchClient
+            getSearchSource(CommonVariables.KAKAO_BLOG_SOURCE_NAME) as KakaoBlogSearchClient
 
         return searchClient.search(blogSearchRequestDto).map {
             BlogSearchResponseDto(
@@ -38,9 +36,7 @@ class BlogSearchService(
     @Recover
     fun searchBlogFromNaver(blogSearchRequestDto: BlogSearchRequestDto): Mono<BlogSearchResponseDto> {
         val searchClient: NaverBlogSearchClient =
-            (blogSearchClientMap[CommonVariables.NAVER_BLOG_SOURCE_NAME]
-                ?: throw IllegalArgumentException("Invalid source: ${CommonVariables.NAVER_BLOG_SOURCE_NAME}"))
-                as NaverBlogSearchClient
+            getSearchSource(CommonVariables.NAVER_BLOG_SOURCE_NAME) as NaverBlogSearchClient
 
         return searchClient.search(blogSearchRequestDto).map {
             BlogSearchResponseDto(
@@ -51,5 +47,11 @@ class BlogSearchService(
                 documents = it.items
             )
         }
+    }
+
+    private fun getSearchSource(sourceName: String): BlogSearchClient {
+        return blogSearchClientMap[sourceName]
+            ?: throw IllegalArgumentException("Invalid source: $sourceName")
+
     }
 }
