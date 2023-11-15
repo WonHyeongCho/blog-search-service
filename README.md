@@ -6,6 +6,7 @@
 
 ## 2. 프로젝트 실행 방법
 
+실행 파일 경로: /output/blog-search-service-1.0.0.jar
 실행
 파일: [blog-search-service-1.0.0.jar](https://github.com/WonHyeongCho/blog-search-service/blob/main/output/blog-search-service-1.0.0.jar)   
 실행 방법: java -jar blog-search-service-1.0.0.jar   

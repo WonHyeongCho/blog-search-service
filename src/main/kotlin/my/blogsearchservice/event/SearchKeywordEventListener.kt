@@ -16,22 +16,28 @@ class SearchKeywordEventListener(
     @Async
     @Transactional
     fun handleSearchKeywordEvent(searchKeywordEvent: SearchKeywordEvent) {
-        val searchKeywordStat: SearchKeywordStat? =
-            getSearchKeywordStatWithLock(searchKeywordEvent.keyword)
-
-        if (searchKeywordStat == null) {
-            saveSearchKeywordStat(SearchKeywordStat(searchKeywordEvent.keyword))
+        if (!isExistSearchKeywordStat(searchKeywordEvent.keyword)) {
+            saveSearchKeywordStat(SearchKeywordStat(searchKeywordEvent.keyword, 1L))
         } else {
-            searchKeywordStat.incrementCount()
-            saveSearchKeywordStat(searchKeywordStat)
+            increaseKeywordStatWithLock(searchKeywordEvent.keyword)
         }
+    }
+
+    private fun increaseKeywordStatWithLock(keyword: String) {
+        val searchKeywordStat: SearchKeywordStat = getSearchKeywordStatWithLock(keyword)
+        searchKeywordStat.incrementCount()
+        saveSearchKeywordStat(searchKeywordStat)
     }
 
     private fun saveSearchKeywordStat(searchKeywordStat: SearchKeywordStat) {
         searchKeywordStatsRepository.save(searchKeywordStat)
     }
 
-    private fun getSearchKeywordStatWithLock(keyword: String): SearchKeywordStat? {
+    private fun getSearchKeywordStatWithLock(keyword: String): SearchKeywordStat {
         return searchKeywordStatsRepository.findByIdWithLock(keyword)
+    }
+
+    private fun isExistSearchKeywordStat(keyword: String): Boolean {
+        return searchKeywordStatsRepository.existsById(keyword)
     }
 }

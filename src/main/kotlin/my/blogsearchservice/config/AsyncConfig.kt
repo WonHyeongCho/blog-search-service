@@ -13,9 +13,9 @@ class AsyncConfig {
     @Bean("threadPoolTaskExecutor")
     fun threadPoolTaskExecutor(): Executor {
         val executor = ThreadPoolTaskExecutor()
-        executor.corePoolSize = 3
+        executor.corePoolSize = 5
         executor.maxPoolSize = 10
-        executor.queueCapacity = 50
+        executor.queueCapacity = 100
         executor.setThreadNamePrefix("BlogSearchServiceAsync-")
         return executor
     }

@@ -12,5 +12,5 @@ interface SearchKeywordStatsRepository : JpaRepository<SearchKeywordStat, String
 
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("select s from SearchKeywordStat s where s.keyword = :keyword")
-    fun findByIdWithLock(keyword: String): SearchKeywordStat?
+    fun findByIdWithLock(keyword: String): SearchKeywordStat
 }
