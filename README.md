@@ -4,9 +4,16 @@
 
 카카오에서 제공하는 블로그 검색 API를 이용하여 검색어에 해당하는 블로그를 검색하는 서비스입니다.
 
-## 2. API 명세
+## 2. 프로젝트 실행 방법
 
-### 2.1. 블로그 검색 API
+실행
+파일: [blog-search-service-1.0.0.jar](https://github.com/WonHyeongCho/blog-search-service/blob/main/output/blog-search-service-1.0.0.jar)   
+실행 방법: java -jar blog-search-service-1.0.0.jar   
+서버 포트: 8080
+
+## 3. API 명세
+
+### 3.1. 블로그 검색 API
 
 ### GET _/blog_
 
@@ -70,7 +77,7 @@
 
 ***
 
-### 2.2. 검색 키워드 랭크 조회 API
+### 3.2. 검색 키워드 랭크 조회 API
 
 ### GET _/search-keyword/rank_
 
@@ -132,7 +139,7 @@
 }
 ```
 
-## 3. 사용한 라이브러리
+## 4. 사용한 라이브러리
 
 1. "org.springframework.retry:spring-retry"
     - 카카오 API 장애 시 재시도를 위한 라이브러리
