@@ -27,6 +27,7 @@ class BlogSearchService(
                 totalCount = it.meta.totalCount,
                 documents = it.documents.map { document -> Blog(document) },
                 sort = blogSearchRequestDto.sort,
+                source = CommonVariables.KAKAO_BLOG_SOURCE_NAME,
             )
         }.onErrorResume { // 에러 발생 시 네이버 API 호출
             searchBlogFromNaver(blogSearchRequestDto)
@@ -45,6 +46,7 @@ class BlogSearchService(
                 totalCount = it.total,
                 documents = it.items.map { item -> Blog(item) },
                 sort = blogSearchRequestDto.sort,
+                source = CommonVariables.NAVER_BLOG_SOURCE_NAME,
             )
         }
     }

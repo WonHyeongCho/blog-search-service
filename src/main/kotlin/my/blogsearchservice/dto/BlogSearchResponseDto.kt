@@ -11,6 +11,7 @@ data class BlogSearchResponseDto(
     var totalCount: Long,
     var documents: List<Blog>,
     var sort: String,
+    var source: String,
 )
 
 data class Blog(

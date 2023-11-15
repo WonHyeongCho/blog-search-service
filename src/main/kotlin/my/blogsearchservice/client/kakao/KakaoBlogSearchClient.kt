@@ -67,7 +67,7 @@ class KakaoBlogSearchClient(
                 logger().error("Kakao Blog Search API Error: ${it.message}")
 
                 when (clientResponse.statusCode()) {
-                    HttpStatus.BAD_REQUEST -> Mono.error(BlogSearchServiceException(ErrorEnum.API_BAD_REQUEST))
+                    HttpStatus.BAD_REQUEST -> Mono.error(BlogSearchServiceException(ErrorEnum.BAD_REQUEST))
                     HttpStatus.UNAUTHORIZED -> Mono.error(BlogSearchServiceException(ErrorEnum.API_UNAUTHORIZED))
                     HttpStatus.FORBIDDEN -> Mono.error(BlogSearchServiceException(ErrorEnum.API_FORBIDDEN))
                     HttpStatus.TOO_MANY_REQUESTS -> Mono.error(BlogSearchServiceException(ErrorEnum.API_TOO_MANY_REQUESTS))

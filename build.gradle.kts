@@ -31,7 +31,6 @@ dependencies {
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
 
     // Jackson
-    runtimeOnly("com.fasterxml.jackson.module:jackson-modules-java8:")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 
     // Kotlin

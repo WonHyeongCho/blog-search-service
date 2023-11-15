@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.client.ClientResponse
 import org.springframework.web.reactive.function.client.WebClient
 import reactor.core.publisher.Mono
+import java.time.Duration
 
 @Component(CommonVariables.NAVER_BLOG_SOURCE_NAME)
 class NaverBlogSearchClient(
@@ -55,7 +56,9 @@ class NaverBlogSearchClient(
                     .build()
             }
             .retrieve()
+            .onStatus({ it.isError }, { errorHandle(it) })
             .bodyToMono(NaverBlogSearchResponse::class.java)
+            .timeout(Duration.ofSeconds(3))
     }
 
     override fun errorHandle(clientResponse: ClientResponse): Mono<Error> {
@@ -64,7 +67,7 @@ class NaverBlogSearchClient(
                 logger().error("Naver Blog Search API Error: ${it.message}")
 
                 when (clientResponse.statusCode()) {
-                    HttpStatus.BAD_REQUEST -> Mono.error(BlogSearchServiceException(ErrorEnum.API_BAD_REQUEST))
+                    HttpStatus.BAD_REQUEST -> Mono.error(BlogSearchServiceException(ErrorEnum.BAD_REQUEST))
                     HttpStatus.FORBIDDEN -> Mono.error(BlogSearchServiceException(ErrorEnum.API_FORBIDDEN))
                     HttpStatus.NOT_FOUND -> Mono.error(BlogSearchServiceException(ErrorEnum.API_NOT_FOUND))
                     else -> Mono.error(BlogSearchServiceException(ErrorEnum.API_INTERNAL_SERVER_ERROR))

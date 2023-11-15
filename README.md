@@ -28,13 +28,14 @@
 | total_page          | integer     | 검색된 총 페이지 개수   |
 | total_count         | integer     | 검색된 총 문서 개수    |
 | sort                | string      | 정렬 방식          |
+| source              | string      | 검색된 문서의 출처     |
 | documents           | object list | 검색된 블로그 문서 리스트 |
 | documents.title     | string      | 문서 제목          |
 | documents.contents  | string      | 문서 내용          |
 | documents.url       | string      | 문서 URL         |
 | documents.blogname  | string      | 문서 이름          |
 | documents.thumbnail | string      | 문서 썸네일 URL     |
-| documents.datetime  | string      | 문서 작성일         |
+| documents.datetime  | localdate   | 문서 작성일         |
 
 #### 응답 예시:
 
@@ -45,6 +46,7 @@
     "total_page": 800,
     "total_count": 322340,
     "sort": "accuracy",
+    "source": "kakao",
     "documents": [
         {
             "title": "<b>판교</b>도서관 <b>맛집</b> 피제리아 비니스 화덕피자전문점 후기",
@@ -52,7 +54,7 @@
             "url": "https://memoryseung1224.tistory.com/1478",
             "blogname": "사진은 추억을 닮다",
             "thumbnail": "https://search2.kakaocdn.net/argon/130x130_85_c/7Ls9PF44n9s",
-            "datetime": "2023-11-08T21:50:16Z"
+            "datetime": "2023-11-08"
         },
         {
             "title": "<b>판교</b><b>맛집</b>|매일식당+내돈내산 (23.10.29)",
@@ -60,7 +62,7 @@
             "url": "https://wshjlove.tistory.com/32",
             "blogname": "잡쓰",
             "thumbnail": "https://search3.kakaocdn.net/argon/130x130_85_c/9vphSziaxph",
-            "datetime": "2023-11-14T11:38:35Z"
+            "datetime": "2023-11-14"
         }
     ]
 }
