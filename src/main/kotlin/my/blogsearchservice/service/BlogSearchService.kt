@@ -4,11 +4,9 @@ import my.blogsearchservice.client.BlogSearchClient
 import my.blogsearchservice.client.kakao.KakaoBlogSearchClient
 import my.blogsearchservice.client.naver.NaverBlogSearchClient
 import my.blogsearchservice.constant.CommonVariables
+import my.blogsearchservice.dto.Blog
 import my.blogsearchservice.dto.BlogSearchRequestDto
 import my.blogsearchservice.dto.BlogSearchResponseDto
-import my.blogsearchservice.exception.BlogSearchServiceException
-import org.springframework.retry.annotation.Recover
-import org.springframework.retry.annotation.Retryable
 import org.springframework.stereotype.Service
 import reactor.core.publisher.Mono
 
@@ -17,7 +15,6 @@ class BlogSearchService(
     private val blogSearchClientMap: Map<String, BlogSearchClient>,
 ) {
 
-    @Retryable(value = [BlogSearchServiceException::class], maxAttempts = 1)
     fun searchBlogFromKakao(blogSearchRequestDto: BlogSearchRequestDto): Mono<BlogSearchResponseDto> {
         val searchClient: KakaoBlogSearchClient =
             getSearchSource(CommonVariables.KAKAO_BLOG_SOURCE_NAME) as KakaoBlogSearchClient
@@ -28,13 +25,14 @@ class BlogSearchService(
                 size = blogSearchRequestDto.size,
                 totalPage = it.meta.pageableCount,
                 totalCount = it.meta.totalCount,
+                documents = it.documents.map { document -> Blog(document) },
                 sort = blogSearchRequestDto.sort,
-                documents = it.documents
             )
+        }.onErrorResume { // 에러 발생 시 네이버 API 호출
+            searchBlogFromNaver(blogSearchRequestDto)
         }
     }
 
-    @Recover
     fun searchBlogFromNaver(blogSearchRequestDto: BlogSearchRequestDto): Mono<BlogSearchResponseDto> {
         val searchClient: NaverBlogSearchClient =
             getSearchSource(CommonVariables.NAVER_BLOG_SOURCE_NAME) as NaverBlogSearchClient
@@ -45,8 +43,8 @@ class BlogSearchService(
                 size = it.display,
                 totalPage = (it.total / it.display).toInt(),
                 totalCount = it.total,
+                documents = it.items.map { item -> Blog(item) },
                 sort = blogSearchRequestDto.sort,
-                documents = it.items
             )
         }
     }
