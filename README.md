@@ -139,13 +139,12 @@
 }
 ```
 
-## 4. 사용한 라이브러리
+## 4. 사용한 외부 라이브러리
 
-1. "org.springframework.retry:spring-retry"
-    - 카카오 API 장애 시 재시도를 위한 라이브러리
-2. "io.kotest:kotest-runner-junit5"
-3. "io.kotest:kotest-assertions-core-jvm"
-4. "io.kotest.extensions:kotest-extensions-spring"
+1. "io.kotest:kotest-runner-junit5"
+2. "io.kotest:kotest-assertions-core-jvm"
+3. "io.kotest.extensions:kotest-extensions-spring"
+4. testImplementation("io.mockk:mockk:1.13.5")
     - 테스트 코드 작성을 위한 코테스트 라이브러리
 
 
