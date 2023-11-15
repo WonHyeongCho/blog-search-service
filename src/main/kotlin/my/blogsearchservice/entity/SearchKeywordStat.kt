@@ -15,9 +15,8 @@ class SearchKeywordStat(
     @Id
     @NotEmpty
     val keyword: String? = null,
+    var count: Long = 1L
 ) {
-
-    var count: Long = 0L
 
     fun incrementCount() {
         count += 1L
